@@ -3,6 +3,7 @@ import axios from 'axios';
 import ItemPaises from './ItemsPaises';
 import ItemEstados from './ItemsEstados';
 import ItemCiudades from './itemCiudades';
+import { Box, InputLabel } from '@material-ui/core';
 
 
 
@@ -51,9 +52,9 @@ const DireccionForm = ({ negocio }) => {
 
     //comunicandome con componente registrarse
     if (JSON.stringify(negocio) === '{}') {
-        console.log("no viene naa")
     } else {
-        console.log("chingas a tu ma!")
+
+        console.log(negocio)
 
     }
     const obtenerPais = (pais) => {
@@ -67,11 +68,31 @@ const DireccionForm = ({ negocio }) => {
         setDepartamento(idestado)
     }
 
-
+    const { id, correo, nombre_comercial, nombre_representante_legal, sitioweb } = negocio
 
     return (
         <Fragment>
             <h2>Direcciones</h2>
+
+            <Box display="flex" flexDirection="row" p={1} m={1}>
+                <Box p={1} className="yellow-light ">
+                    <InputLabel id="">Nombre del Negocio</InputLabel>
+                    <span>{nombre_comercial}</span>
+                </Box>
+                <Box p={1} className="yellow-light ">
+                    <InputLabel id="">Nombre del propietario o rep legal</InputLabel>
+                    <span>{nombre_representante_legal}</span>
+                </Box>
+                <Box p={1} className="yellow-light ">
+                    <InputLabel id="">Sitio Web</InputLabel>
+                    <span>{sitioweb}</span>
+                </Box>
+                <Box p={1} className="yellow-light ">
+                    <InputLabel id="">Correo electrónico</InputLabel>
+                    <span>{correo}</span>
+                </Box>
+            </Box>
+
             <ItemPaises
                 paises={paises}
                 obtenerPais={obtenerPais}

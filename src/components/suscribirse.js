@@ -89,8 +89,7 @@ const SuscribirmeForm = () => {
 
     const crearNegocio = (registrarse) => {
         setRegistro(registrarse)
-        console.log("debería de cambiar esta meirda!!!")
-        setValue(1)
+        //setValue(1)
     }
 
 
@@ -124,10 +123,14 @@ const SuscribirmeForm = () => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <div style={{ marginLeft: '25%', marginRight: '25%' }}>
+                <Box display="flex" flexDirection="row" p={1} m={1}>
+                    <Box p={1} >
+                        <RegistrarseForm crearNegocio={crearNegocio} />
+                    </Box>
+                    <Box p={1} >
 
-                    <RegistrarseForm crearNegocio={crearNegocio} />
-                </div>
+                    </Box>
+                </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <DireccionForm negocio={Registro} />

@@ -1,4 +1,6 @@
-label{
-    font-weight: bold;
-    
+label {
+  font-weight: bold;
+}
+.yellow-light {
+  background-color: #f0f4c3;
 }

@@ -1,10 +1,12 @@
-import { Button, FormControl, FormHelperText, Input, InputLabel, TextField } from '@material-ui/core';
-import React, { Fragment, useState } from 'react';
+import { Box, Button, FormControl, FormHelperText, Grid, Input, InputLabel, TextField } from '@material-ui/core';
+import React, { Fragment, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import Alert from '@material-ui/lab/Alert';
 
 const RegistrarseForm = ({ crearNegocio }) => {
     //declaracion de estados
+
     const [registrarse, actualizarRegistrarse] = useState({
         id: 0,
         nombre_comercial: '',
@@ -30,6 +32,20 @@ const RegistrarseForm = ({ crearNegocio }) => {
         error_campo2: false,
         error_campo3: false
     })
+    //localstorage
+    let informacion = localStorage.getItem('negocio')
+    if (!informacion) {
+        informacion = {}
+    }
+
+    useEffect(() => {
+        if (informacion) {
+            registrarse.id = uuidv4()
+            localStorage.setItem('negocio', JSON.stringify(registrarse))
+        } else {
+            localStorage.setItem('negocio', {})
+        }
+    }, [registrarse])
 
     //maneja el estado
     const handleState = (e) => {
@@ -38,7 +54,6 @@ const RegistrarseForm = ({ crearNegocio }) => {
             [e.target.name]: e.target.value
         })
     }
-
 
     //Extraner valores
     const { nombre_comercial, nombre_representante_legal, correo, sitioweb, grabado } = registrarse
@@ -85,7 +100,7 @@ const RegistrarseForm = ({ crearNegocio }) => {
         actualizarError(false)
 
         registrarse.grabado = true;
-        registrarse.id = 17
+
 
         setEditar({
             editar_campo1: true,
@@ -124,11 +139,8 @@ const RegistrarseForm = ({ crearNegocio }) => {
     return (
         <Fragment>
             <h2>Datos del Negocio</h2>
-
-            <FormControl
-                fullWidth='true'
-            >
-                <div style={{}}>
+            <Grid container spacing={1}>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         error={error_campo1}
                         id='nombre_comercial'
@@ -154,6 +166,8 @@ const RegistrarseForm = ({ crearNegocio }) => {
                         size="small"
                         onClick={() => editarInformacion('editar_campo1')}
                     >Editar</Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         error={error_campo2}
                         id="nombre_representante_legal"
@@ -168,7 +182,6 @@ const RegistrarseForm = ({ crearNegocio }) => {
                         value={nombre_representante_legal}
                         style={{ marginTop: '10px' }}
                         disabled={editar_campo2}
-
                     />
                     <Button
                         color="primary"
@@ -179,6 +192,21 @@ const RegistrarseForm = ({ crearNegocio }) => {
                         onClick={() => editarInformacion('editar_campo2')}
                         disabled={!editar_campo2}
                     >Editar</Button>
+                </Grid>
+            </Grid>
+            <Box display="flex" flexDirection="row" p={1} m={1}>
+                <Box p={1} >
+
+
+                </Box>
+
+                <Box p={1} >
+
+                </Box>
+
+            </Box>
+            <Box display="flex" flexDirection="row" p={1} m={1}>
+                <Box p={1} >
                     <TextField
                         error={error_campo3}
                         id="correo"
@@ -203,6 +231,10 @@ const RegistrarseForm = ({ crearNegocio }) => {
                         size="small"
                         onClick={() => editarInformacion('editar_campo3')}
                     >Editar</Button>
+                </Box>
+                <Box p={1}
+
+                >
                     <TextField
                         id="sitioweb"
                         name='sitioweb'
@@ -226,26 +258,33 @@ const RegistrarseForm = ({ crearNegocio }) => {
                         size="small"
                         onClick={() => editarInformacion('editar_campo4')}
                     >Editar</Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth="true"
-                        elementType="submit"
-                        onClick={(e) => { submitRegistrar(e) }}
-                        style={{ marginTop: '10px' }}
-                        disabled={grabado}
-                    >
-                        Registrar
-                    </Button>
-                    {error ?
-                        <Alert severity="warning" style={{ marginTop: '10px' }}>Por favor revise los campos</Alert>
-                        :
-                        null
-                    }
+                </Box>
+            </Box>
 
-                </div>
+            <div style={{}}>
 
-            </FormControl>
+
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth="true"
+                    elementType="submit"
+                    onClick={(e) => { submitRegistrar(e) }}
+                    style={{ marginTop: '10px' }}
+                    disabled={grabado}
+                >
+                    Registrar
+                </Button>
+                {error ?
+                    <Alert severity="warning" style={{ marginTop: '10px' }}>Por favor revise los campos</Alert>
+                    :
+                    null
+                }
+
+            </div>
+
+
         </Fragment>
     );
 }
