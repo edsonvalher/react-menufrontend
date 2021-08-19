@@ -1,13 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import { FormControl } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Alert, Form, Spinner } from "react-bootstrap";
 import axios from 'axios';
 
 
-const ItemCiudades = ({ departamentoSeleccionado, obtenerMunicipio }) => {
+const ItemCiudades = ({ estadoSeleccionado, obtenerCiudad }) => {
 
     //* este controla el pais entrante
 
@@ -19,14 +15,14 @@ const ItemCiudades = ({ departamentoSeleccionado, obtenerMunicipio }) => {
 
     useEffect(() => {
         const consultaCiudades = async () => {
-            if ((departamentoSeleccionado === '') || (departamentoSeleccionado === undefined)) {
+            if ((estadoSeleccionado === '') || (estadoSeleccionado === undefined)) {
                 setMunicipios([])
                 setvalor({
                     ['idciudad']: 0
                 })
                 return
             } else {
-                const resultado = await axios.get(`http://localhost:1280/catalogos/ciudades/${departamentoSeleccionado}`)
+                const resultado = await axios.get(`http://localhost:1280/catalogos/ciudades/${estadoSeleccionado}`)
                 const { data } = resultado.data
                 setMunicipios(data)
 
@@ -34,10 +30,10 @@ const ItemCiudades = ({ departamentoSeleccionado, obtenerMunicipio }) => {
         }
 
         consultaCiudades()
-    }, [departamentoSeleccionado])
+    }, [estadoSeleccionado])
 
     // maneja los cambios
-    const handleCiudad = e => {
+    const handleChange = e => {
         setvalor(
             {
                 [e.target.name]: e.target.value
@@ -48,47 +44,36 @@ const ItemCiudades = ({ departamentoSeleccionado, obtenerMunicipio }) => {
     // aqui debería de cambiar una vez el pais cambie o el no venga nulo
 
 
-    const controles = municipios.map(item => {
+    const opciones = municipios.map(item => {
         const { idciudad, ciudad } = item
         return (
-            <MenuItem key={idciudad} value={idciudad}>
-                {ciudad}
-            </MenuItem>
+            <option key={idciudad} value={idciudad}>{ciudad}</option>
         )
     })
 
     // primero valida que el pais tenga información para pasarlo al ciudad
-    obtenerMunicipio(valor)
+    obtenerCiudad(valor)
 
     if (municipios.length === 0) {
         return (
-            <p>NO TIENE MUNICIPIO</p>
+            <div>
+                <Alert variant='warning'>
+                    <span>Debe seleccionar un departamento</span>
+                </Alert>
+            </div>
         )
     } else {
         return (
             <Fragment>
-                <FormControl fullWidth='true'>
-                    <InputLabel id="label-pais">Municipios</InputLabel>
-                    <Select
-                        labelId="label-pais"
-                        id="idciudad"
-                        name="idciudad"
-                        onChange={handleCiudad}
-                        size="small"
-                        variant="standard"
-                        fullWidth
-                    >
-                        <MenuItem value=""
-                            size="small"
-                            variant="standard"
-                            fullWidth
-                        >
-                            <em>None</em>
-                        </MenuItem>
-                        {controles}
-
-                    </Select>
-                </FormControl>
+                <Form.Control
+                    as="select"
+                    custom
+                    name="idciudad"
+                    onChange={handleChange}
+                >
+                    <option key={0} value={0}>seleccione</option>
+                    {opciones}
+                </Form.Control>
             </Fragment>
 
         )

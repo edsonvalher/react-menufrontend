@@ -3,7 +3,7 @@ import axios from 'axios';
 import ItemPaises from './ItemsPaises';
 import ItemEstados from './ItemsEstados';
 import ItemCiudades from './itemCiudades';
-import { Box, InputLabel } from '@material-ui/core';
+import { Col, Row, Form, Button } from 'react-bootstrap';
 
 
 
@@ -11,10 +11,12 @@ import { Box, InputLabel } from '@material-ui/core';
 
 const DireccionForm = ({ negocio }) => {
 
-    const [paises, setpais] = useState([])
+    const [paises, setpaises] = useState([])
 
     const [pais, setPais] = useState()
-    const [departamento, setDepartamento] = useState()
+    const [estado, setEstado] = useState()
+    const [ciudad, setCiudad] = useState()
+
 
 
 
@@ -25,7 +27,7 @@ const DireccionForm = ({ negocio }) => {
         const consultaPaises = async () => {
             const resultado = await axios.get(`http://localhost:1280/catalogos/paises`)
             const { data } = resultado.data
-            setpais(data)
+            setpaises(data)
         }
         consultaPaises()
     }, [paises])
@@ -54,57 +56,95 @@ const DireccionForm = ({ negocio }) => {
     if (JSON.stringify(negocio) === '{}') {
     } else {
 
-        console.log(negocio)
+        //console.log(negocio)
 
     }
     const obtenerPais = (pais) => {
         const { idpais } = pais
         setPais(idpais)
-
-        //console.log(idpais)
     }
-    const obtenerDepartamento = (departamento) => {
-        const { idestado } = departamento
-        setDepartamento(idestado)
+    const obtenerEstado = (estado) => {
+        const { idestado } = estado
+        setEstado(idestado)
+    }
+    const obtenerCiudad = (ciudad) => {
+        const { idciudad } = ciudad
+        setCiudad(idciudad)
     }
 
-    const { id, correo, nombre_comercial, nombre_representante_legal, sitioweb } = negocio
+
+    const submitGuardar = (e) => {
+        e.preventDefault()
+        console.log('submit direccion')
+        actualizarDireccion({
+            ...direccionEstado,
+            idciudad: ciudad,
+            idnegocio: 0,
+
+
+        })
+    }
+
+
 
     return (
         <Fragment>
-            <h2>Direcciones</h2>
+            <Form onSubmit={submitGuardar}>
+                <Form.Group
+                    className="mb-3"
+                    controlId="pais"
+                >
+                    <Form.Label>Seleccione País</Form.Label>
+                    <ItemPaises
+                        obtenerPais={obtenerPais}
+                    />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3"
+                    controlId="depto"
+                >
+                    <Form.Label>Seleccione departamento</Form.Label>
+                    <ItemEstados
+                        paisSeleccionado={pais}
+                        obtenerEstado={obtenerEstado}
+                    />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3"
+                    controlId="munpio"
+                >
+                    <Form.Label>Seleccione municipio</Form.Label>
+                    <ItemCiudades
+                        estadoSeleccionado={estado}
+                        obtenerCiudad={obtenerCiudad}
+                    />
+                </Form.Group>
 
-            <Box display="flex" flexDirection="row" p={1} m={1}>
-                <Box p={1} className="yellow-light ">
-                    <InputLabel id="">Nombre del Negocio</InputLabel>
-                    <span>{nombre_comercial}</span>
-                </Box>
-                <Box p={1} className="yellow-light ">
-                    <InputLabel id="">Nombre del propietario o rep legal</InputLabel>
-                    <span>{nombre_representante_legal}</span>
-                </Box>
-                <Box p={1} className="yellow-light ">
-                    <InputLabel id="">Sitio Web</InputLabel>
-                    <span>{sitioweb}</span>
-                </Box>
-                <Box p={1} className="yellow-light ">
-                    <InputLabel id="">Correo electrónico</InputLabel>
-                    <span>{correo}</span>
-                </Box>
-            </Box>
+                <Form.Group
+                    className="mb-3"
+                    controlId="sitioweb"
+                >
+                    <Form.Label>Sitio web</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        row="3"
+                        name="direccion"
+                        value={direccion}
+                        onChange={handleState}
 
-            <ItemPaises
-                paises={paises}
-                obtenerPais={obtenerPais}
-            />
-            <ItemEstados
-                paisSeleccionado={pais}
-                obtenerDepartamento={obtenerDepartamento}
-            />
-            <ItemCiudades
-                departamentoSeleccionado={departamento}
-                obtenerMunicipio={obtenerDepartamento}
-            />
+                    ></Form.Control>
+                    <Form.Text className="text-muted">
+                        Dirección del negocio
+                    </Form.Text>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                    >Guardar información</Button>
+
+                </Form.Group>
+            </Form>
+
+
         </Fragment>
     );
 }

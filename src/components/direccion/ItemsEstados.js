@@ -1,13 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import { FormControl } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Alert, Form, Spinner } from "react-bootstrap";
 import axios from 'axios';
 
 
-const ItemEstados = ({ paisSeleccionado, obtenerDepartamento }) => {
+const ItemEstados = ({ paisSeleccionado, obtenerEstado }) => {
 
     //* este controla el pais entrante
 
@@ -16,6 +12,7 @@ const ItemEstados = ({ paisSeleccionado, obtenerDepartamento }) => {
     const [valor, setvalor] = useState({
         idestado: 0
     })
+
 
     useEffect(() => {
         const consultaEstados = async () => {
@@ -37,60 +34,65 @@ const ItemEstados = ({ paisSeleccionado, obtenerDepartamento }) => {
     }, [paisSeleccionado])
 
     // maneja los cambios
-    const handleEstado = e => {
-        setvalor(
-            {
-                [e.target.name]: e.target.value
-            }
-        )
-    }
 
     // aqui debería de cambiar una vez el pais cambie o el no venga nulo
 
-
-    const controles = departamentos.map(item => {
+    const opciones = departamentos.map(item => {
         const { idestado, estado } = item
         return (
-            <MenuItem key={idestado} value={idestado}>
-                {estado}
-            </MenuItem>
+            <option key={idestado} value={idestado}>{estado}</option>
         )
     })
-
     // primero valida que el pais tenga información para pasarlo al estado
-    obtenerDepartamento(valor)
 
-    if (departamentos.length === 0) {
+    const validarpais = () => {
+        try {
+            return paisSeleccionado[0]
+
+        } catch (error) {
+            return undefined
+        }
+    }
+
+    const handleChange = (e) => {
+        setvalor({
+            ...valor,
+            [e.target.name]: [e.target.value]
+        })
+    }
+
+    obtenerEstado(valor)
+
+    if (departamentos.length === 0 || (validarpais() === undefined || validarpais() === '' || validarpais() === '0')) {
+
         return (
-            <p>NO TIENE DEPARTAMENTOS</p>
+            <div>
+                <Alert variant='warning'>
+                    <span>Debe seleccionar un país</span>
+                </Alert>
+            </div>
+
         )
-    } else {
+
+    } else if (departamentos.length === 0 && (validarpais() == undefined || validarpais() === '' || validarpais() === '0')) {
+        return (
+            <div>
+                <Spinner animation="border" />
+            </div>
+        )
+    } else if (departamentos.length !== 0 && validarpais() !== '0') {
         return (
             <Fragment>
-                <FormControl fullWidth='true'>
-                    <InputLabel id="label-pais">Departamentos</InputLabel>
-                    <Select
-                        labelId="label-pais"
-                        id="idestado"
-                        name="idestado"
-                        onChange={handleEstado}
-                        size="small"
-                        variant="standard"
-                        fullWidth
-                    >
-                        <MenuItem value=""
-                            size="small"
-                            variant="standard"
-                            fullWidth
-                        >
-                            <em>None</em>
-                        </MenuItem>
-                        {controles}
-
-                    </Select>
-                </FormControl>
+                <Form.Control
+                    as="select"
+                    custom
+                    name="idestado"
+                    onChange={handleChange}
+                >
+                    <option key={0} value={0}>seleccione</option>
+                    {opciones}
+                </Form.Control>
             </Fragment>
-
         )
     }
 

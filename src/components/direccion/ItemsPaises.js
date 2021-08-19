@@ -1,73 +1,64 @@
-import React, { Fragment, useState } from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import { FormControl } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Form, Spinner } from "react-bootstrap";
+import axios from 'axios';
 
 
-const ItemPaises = ({ paises, obtenerPais }) => {
+const ItemPaises = ({ obtenerPais }) => {
 
-    const [valor, setvalor] = useState({
+    const [paises, setpaises] = useState([])
+    const [seleccion, setSeleccion] = useState({
         idpais: ''
     })
-    const handlePais = e => {
-        setvalor(
-            {
-                [e.target.name]: e.target.value
-            }
-        )
+    //obtiene los paises del estado
+    const obtienePaises = async () => {
+        const resultado = await axios.get(`http://localhost:1280/catalogos/paises`)
+        const { data } = resultado.data
+        setpaises(data)
+        return data
     }
 
-    obtenerPais(valor)
+    useEffect(() => {
+        if (Object.keys(paises).length !== 0) return
+        obtienePaises()
+    }, [])
 
-    const controles = paises.map(item => {
+    const opciones = paises.map(item => {
         const { idpais, nombre } = item
         return (
-            <MenuItem key={idpais} value={idpais}>
-                {nombre}
-            </MenuItem>
+            <option key={idpais} value={idpais}>{nombre}</option>
         )
     })
 
-
+    const handleChange = (e) => {
+        setSeleccion({
+            ...seleccion,
+            [e.target.name]: [e.target.value]
+        })
+    }
+    //envia el valor seleccionado
+    obtenerPais(seleccion)
     if (paises.length === 0) {
         return (
-            <CircularProgress />
+            <Fragment>
+                <div>
+                    <Spinner animation="border" />
+                </div>
+            </Fragment>
         )
     } else {
         return (
             <Fragment>
-                <FormControl fullWidth='true'>
-                    <InputLabel id="label-pais">Pais</InputLabel>
-                    <Select
-                        labelId="label-pais"
-                        id="idpais"
-                        name="idpais"
-                        //value={valor}
-                        onChange={handlePais}
-                        size="small"
-                        variant="standard"
-                        fullWidth
-                    >
-                        <MenuItem value=""
-                            size="small"
-                            variant="standard"
-                            fullWidth
-                        >
-                            <em>None</em>
-                        </MenuItem>
-                        {controles}
-                    </Select>
-                </FormControl>
-
-
-
+                <Form.Control
+                    as="select"
+                    custom
+                    name="idpais"
+                    onChange={handleChange}
+                >
+                    <option key={0} value={0}>seleccione</option>
+                    {opciones}
+                </Form.Control>
             </Fragment>
         )
-
-
-
     }
 
 
