@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import RegistrarseForm from "./registrarse";
 import DireccionForm from "./direccion/Direccion";
@@ -6,8 +6,9 @@ import { Fragment } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 
 import { v4 as uuidv4 } from 'uuid'
+import MensajeDialog from "./dialog/mensaje";
 
-const SuscribirmeForm = ({ obtenerNegocio }) => {
+const SuscribirmeForm = ({ mostrarSuscribirme }) => {
 
     //declaracion de estados
     const [registrarse, actualizarRegistrarse] = useState({
@@ -36,6 +37,9 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
 
     //declaracion de estado errores
     const [error, actualizarError] = useState(false)
+
+    //mostrar ocultar componente
+    const [mostrar, setMostrar] = useState(true)
 
     //editar campo segun solicite
     const [editarCampo, seteditarCampo] = useState({
@@ -81,7 +85,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                 error_nombre_comercial: true
             })
             actualizarError(true)
-            setcampo('Nombre Comercial')
+            setcampo('Falta el campo "Nombre Comercial"')
             return
         } else {
             setvalidacion({
@@ -97,7 +101,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                 error_representante_legal: true
             })
             actualizarError(true)
-            setcampo('Nombre Propietario o Rep Legal')
+            setcampo('Falta el campo "Nombre Propietario o Rep Legal"')
             return
         } else {
             setvalidacion({
@@ -113,7 +117,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                 error_correo: true
             })
             actualizarError(true)
-            setcampo('Correo electrónico')
+            setcampo('Falta el campo "Correo electrónico"')
             return
         } else {
             setvalidacion({
@@ -140,8 +144,12 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
 
         //4 REINICIAR FORM
         console.log("enviando...")
+        //5 OCULTAR FORMULARIO
+        setMostrar(false)
     }
-    obtenerNegocio(registrarse)
+    //obtenerNegocio(registrarse)
+    mostrarSuscribirme(mostrar)
+
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -155,9 +163,23 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
 
     const { editar_nombre_comercial, editar_representante_legal, editar_correo, editar_sitioweb } = editarCampo
 
+    const obtenerEstadoMensaje = (valor) => {
+        //console.log('EL VALOR ES ' + valor)
+        if (valor) {
+            //console.log("el valor viene true")
+            actualizarError(false)
+        }
+    }
 
     return (
-        <Fragment>
+
+        <Col sm={12} className={mostrar ? '' : 'd-none'}>
+            <MensajeDialog
+                titulo={'VALIDACIÓN'}
+                contenido={campo}
+                mostrar={error}
+                obtenerEstadoMensaje={obtenerEstadoMensaje}
+            />
             <Form
                 onSubmit={submitRegistrar}
             >
@@ -177,12 +199,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                     <Form.Text className="text-muted">
                         Nombre por el que le conocen
                     </Form.Text>
-                    <Button
-                        name="btnnombrecomercial"
-                        variant='link'
-                        disabled={!editar_nombre_comercial}
-                        onClick={() => editarInformacion('editar_nombre_comercial')}
-                    >Editar</Button>
+
                 </Form.Group>
 
                 <Form.Group
@@ -201,12 +218,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                     <Form.Text className="text-muted">
                         Nombre del rep. legal o propietario
                     </Form.Text>
-                    <Button
-                        name="btnreplegal"
-                        variant='link'
-                        disabled={!editar_representante_legal}
-                        onClick={() => editarInformacion('editar_representante_legal')}
-                    >Editar</Button>
+
                 </Form.Group>
                 <Form.Group
                     className="mb-3"
@@ -225,12 +237,7 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                     <Form.Text className="text-muted">
                         Correo electrónico propietario o rep. legal
                     </Form.Text>
-                    <Button
-                        name="btncorreo"
-                        variant='link'
-                        disabled={!editar_correo}
-                        onClick={() => editarInformacion('editar_correo')}
-                    >Editar</Button>
+
                 </Form.Group>
 
                 <Form.Group
@@ -249,17 +256,13 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                     <Form.Text className="text-muted">
                         Sitio web (opcional)
                     </Form.Text>
-                    <Button
-                        name="btnsitioweb"
-                        variant='link'
-                        disabled={!editar_sitioweb}
-                        onClick={() => editarInformacion('editar_sitioweb')}
-                    >Editar</Button>
+
                 </Form.Group>
                 <Button
                     variant="primary"
                     type="submit"
-                >Guardar información</Button>
+                    block
+                >GUARDAR DATOS DE EMPRESA</Button>
             </Form>
             {error ?
                 <Alert variant='danger' style={{ marginTop: '20px' }}>
@@ -268,9 +271,11 @@ const SuscribirmeForm = ({ obtenerNegocio }) => {
                 :
                 null
             }
+        </Col>
 
 
-        </Fragment>
+
+
 
     );
 }

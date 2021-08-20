@@ -9,7 +9,7 @@ import { Col, Row, Form, Button } from 'react-bootstrap';
 
 
 
-const DireccionForm = ({ negocio }) => {
+const DireccionForm = ({ negocio, mostrarDireccion, verSuscribirme }) => {
 
     const [paises, setpaises] = useState([])
 
@@ -17,7 +17,8 @@ const DireccionForm = ({ negocio }) => {
     const [estado, setEstado] = useState()
     const [ciudad, setCiudad] = useState()
 
-
+    //mostrar ocultar componente
+    const [mostrar, setMostrar] = useState(false)
 
 
 
@@ -41,7 +42,9 @@ const DireccionForm = ({ negocio }) => {
         idciudad: 0,
         idnegocio: 0,
         latitud: 0,
-        longitud: 0
+        longitud: 0,
+        telefono1: '',
+        telefono2: ''
     })
 
     const handleState = (e) => {
@@ -50,7 +53,7 @@ const DireccionForm = ({ negocio }) => {
             [e.target.name]: e.target.value
         })
     }
-    const { iddireccion, direccion, idciudad, idnegocio, latitud, longitud } = direccionEstado
+    const { iddireccion, direccion, idciudad, idnegocio, latitud, longitud, telefono1, telefono2 } = direccionEstado
 
     //comunicandome con componente registrarse
     if (JSON.stringify(negocio) === '{}') {
@@ -83,69 +86,112 @@ const DireccionForm = ({ negocio }) => {
 
 
         })
+        setMostrar(true)
     }
+    mostrarDireccion(mostrar)
+
 
 
 
     return (
-        <Fragment>
+        <Col sm={12} className={!verSuscribirme ? '' : 'd-none'}>
             <Form onSubmit={submitGuardar}>
-                <Form.Group
-                    className="mb-3"
-                    controlId="pais"
-                >
-                    <Form.Label>Seleccione País</Form.Label>
-                    <ItemPaises
-                        obtenerPais={obtenerPais}
-                    />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3"
-                    controlId="depto"
-                >
-                    <Form.Label>Seleccione departamento</Form.Label>
-                    <ItemEstados
-                        paisSeleccionado={pais}
-                        obtenerEstado={obtenerEstado}
-                    />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3"
-                    controlId="munpio"
-                >
-                    <Form.Label>Seleccione municipio</Form.Label>
-                    <ItemCiudades
-                        estadoSeleccionado={estado}
-                        obtenerCiudad={obtenerCiudad}
-                    />
-                </Form.Group>
+                <Row className="justify-content-md-center">
+                    <Col sm={6}>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="pais"
+                        >
+                            <Form.Label>Seleccione País</Form.Label>
+                            <ItemPaises
+                                obtenerPais={obtenerPais}
+                            />
+                        </Form.Group>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="depto"
+                        >
+                            <Form.Label>Seleccione departamento</Form.Label>
+                            <ItemEstados
+                                paisSeleccionado={pais}
+                                obtenerEstado={obtenerEstado}
+                            />
+                        </Form.Group>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="munpio"
+                        >
+                            <Form.Label>Seleccione municipio</Form.Label>
+                            <ItemCiudades
+                                estadoSeleccionado={estado}
+                                obtenerCiudad={obtenerCiudad}
+                            />
+                        </Form.Group>
 
-                <Form.Group
-                    className="mb-3"
-                    controlId="sitioweb"
-                >
-                    <Form.Label>Sitio web</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        row="3"
-                        name="direccion"
-                        value={direccion}
-                        onChange={handleState}
+                        <Form.Group
+                            className="mb-3"
+                            controlId="sitioweb"
+                        >
+                            <Form.Label>Dirección </Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                row="3"
+                                name="direccion"
+                                value={direccion}
+                                onChange={handleState}
 
-                    ></Form.Control>
-                    <Form.Text className="text-muted">
-                        Dirección del negocio
-                    </Form.Text>
-                    <Button
-                        variant="primary"
-                        type="submit"
-                    >Guardar información</Button>
+                            ></Form.Control>
+                            <Form.Text className="text-muted">
+                                Dirección del negocio
+                            </Form.Text>
+                        </Form.Group>
+                    </Col>
+                    <Col sm={6}>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="telefono1"
+                        >
+                            <Form.Label>Teléfono principal</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="ej: 22223333"
+                                name='telefono1'
+                                value={telefono1}
+                                onChange={handleState}
 
-                </Form.Group>
+                            ></Form.Control>
+                            <Form.Text className="text-muted">
+                                Teléfono principal
+                            </Form.Text>
+                        </Form.Group>
+
+                        <Form.Group
+                            className="mb-3"
+                            controlId="telefono2"
+                        >
+                            <Form.Label>Teléfono secundario</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="ej: 22223333"
+                                name='telefono2'
+                                value={telefono2}
+                                onChange={handleState}
+
+                            ></Form.Control>
+                            <Form.Text className="text-muted">
+                                Teléfono secundario (opcional)
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            block
+                        >GUARDAR LOCALIZACIÓN</Button>
+                    </Col>
+                </Row>
             </Form>
+        </Col>
 
-
-        </Fragment>
     );
 }
 

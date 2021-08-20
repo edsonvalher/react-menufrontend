@@ -3,34 +3,54 @@ import { v4 as uuidv4 } from 'uuid';
 
 import DireccionForm from './direccion/Direccion';
 import SuscribirmeForm from './suscribirse';
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Navbar, Row } from "react-bootstrap";
 
 const RegistrarseForm = () => {
     //declaracion de estados
+    const [verSuscribirme, setverSuscribirme] = useState(false)
+    const [verDireccion, setverDireccion] = useState(false)
 
-    const obtenerNegocio = (negocio) => {
-        console.log(negocio)
+    const mostrarSuscribirme = (valor) => {
+        setverSuscribirme(valor)
+    }
+    const mostrarDireccion = (valor) => {
+        console.log(valor)
     }
     return (
         <Fragment>
+            <Navbar>
+                <Container >
+                    <Navbar.Brand href="#home">
+                        <h3>
+
+                            REGISTRA TU EMPRESA
+                        </h3>
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                    <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Text>
+                            Signed in as: <a href="#login">Mark Otto</a>
+                        </Navbar.Text>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
             <Container fluid="md" >
+
                 <Row>
-                    <Col sm={8}>
-                        <SuscribirmeForm
-                            obtenerNegocio={obtenerNegocio} />
-                    </Col>
-                    <Col sm={4}>
-                        <DireccionForm />
-                    </Col>
+
+                    <SuscribirmeForm
+                        mostrarSuscribirme={mostrarSuscribirme}
+                    />
+
+
+                    <DireccionForm
+                        mostrarDireccion={mostrarDireccion}
+                        verSuscribirme={verSuscribirme}
+
+                    />
+
                 </Row>
-                <Row>
-                    <Col>
-                        1 a 2
-                    </Col>
-                    <Col>
-                        2 a 2
-                    </Col>
-                </Row>
+
             </Container>
         </Fragment>
 
