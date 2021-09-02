@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Alert, Form, Spinner } from "react-bootstrap";
 import axios from 'axios';
+import { getCiudades } from '../../services/catalogos';
 
 
 const ItemCiudades = ({ estadoSeleccionado, obtenerCiudad }) => {
@@ -22,7 +23,7 @@ const ItemCiudades = ({ estadoSeleccionado, obtenerCiudad }) => {
                 })
                 return
             } else {
-                const resultado = await axios.get(`http://localhost:1280/catalogos/ciudades/${estadoSeleccionado}`)
+                const resultado = await getCiudades(estadoSeleccionado)
                 const { data } = resultado.data
                 setMunicipios(data)
 

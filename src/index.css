@@ -4,3 +4,8 @@ label {
 .yellow-light {
   background-color: #f0f4c3;
 }
+
+.margenes {
+  margin-left: 25%;
+  margin-right: 25%;
+}

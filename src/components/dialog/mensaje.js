@@ -3,7 +3,6 @@ import { Modal, Button } from 'react-bootstrap';
 
 const MensajeDialog = ({ titulo, contenido, mostrar = false, obtenerEstadoMensaje }) => {
 
-    console.log("mensaje dialog colocado " + mostrar)
 
     const [show, setShow] = useState(mostrar);
     const handleClose = () => setShow(mostrar);

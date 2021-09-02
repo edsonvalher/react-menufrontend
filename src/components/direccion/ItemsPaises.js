@@ -1,17 +1,18 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Form, Spinner } from "react-bootstrap";
 import axios from 'axios';
+import { getpaises } from '../../services/catalogos';
+
 
 
 const ItemPaises = ({ obtenerPais }) => {
-
     const [paises, setpaises] = useState([])
     const [seleccion, setSeleccion] = useState({
         idpais: ''
     })
     //obtiene los paises del estado
     const obtienePaises = async () => {
-        const resultado = await axios.get(`http://localhost:1280/catalogos/paises`)
+        const resultado = await getpaises()
         const { data } = resultado.data
         setpaises(data)
         return data

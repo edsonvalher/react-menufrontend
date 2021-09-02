@@ -7,8 +7,9 @@ import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 
 import { v4 as uuidv4 } from 'uuid'
 import MensajeDialog from "./dialog/mensaje";
+import shortid from "shortid";
 
-const SuscribirmeForm = ({ mostrarSuscribirme }) => {
+const SuscribirmeForm = ({ mostrarSuscribirme, obtenerId }) => {
 
     //declaracion de estados
     const [registrarse, actualizarRegistrarse] = useState({
@@ -17,7 +18,8 @@ const SuscribirmeForm = ({ mostrarSuscribirme }) => {
         nombre_representante_legal: '',
         correo: '',
         sitioweb: '',
-        grabado: false
+        grabado: false,
+        activo: false
     })
 
     //maneja el estado de registrarse
@@ -27,6 +29,7 @@ const SuscribirmeForm = ({ mostrarSuscribirme }) => {
             [e.target.name]: e.target.value
         })
     }
+    obtenerId(registrarse)
 
     //campo encontrado con error
     const [campo, setcampo] = useState('')
@@ -128,7 +131,7 @@ const SuscribirmeForm = ({ mostrarSuscribirme }) => {
         }
 
 
-        registrarse.id = uuidv4()
+        registrarse.id = shortid.generate()
         registrarse.grabado = true;
 
         //habilita el botón de edición de cada campo
@@ -173,97 +176,100 @@ const SuscribirmeForm = ({ mostrarSuscribirme }) => {
 
     return (
 
-        <Col sm={12} className={mostrar ? '' : 'd-none'}>
+        <Col sm={12} className={mostrar ? '' : 'd-none'}    >
+
             <MensajeDialog
                 titulo={'VALIDACIÓN'}
                 contenido={campo}
                 mostrar={error}
                 obtenerEstadoMensaje={obtenerEstadoMensaje}
             />
-            <Form
-                onSubmit={submitRegistrar}
-            >
-                <Form.Group
-                    className="mb-3"
-                    controlId="nombre_comercial"
+            <div className="margenes">
+                <Form
+                    onSubmit={submitRegistrar}
                 >
-                    <Form.Label>Nombre Comercial</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="ej: Mi Negocio S.A."
-                        name='nombre_comercial'
-                        value={nombre_comercial}
-                        onChange={handleState}
+                    <Form.Group
+                        className="mb-3"
+                        controlId="nombre_comercial"
+                    >
+                        <Form.Label>Nombre Comercial</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="ej: Mi Negocio S.A."
+                            name='nombre_comercial'
+                            value={nombre_comercial}
+                            onChange={handleState}
 
-                    ></Form.Control>
-                    <Form.Text className="text-muted">
-                        Nombre por el que le conocen
-                    </Form.Text>
+                        ></Form.Control>
+                        <Form.Text className="text-muted">
+                            Nombre por el que le conocen
+                        </Form.Text>
 
-                </Form.Group>
+                    </Form.Group>
 
-                <Form.Group
-                    className="mb-3"
-                    controlId="nombre_representante_legal"
-                >
-                    <Form.Label>Nombre del rep. legal o propietario</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="ej: Juan Pérez"
-                        name="nombre_representante_legal"
-                        value={nombre_representante_legal}
-                        onChange={handleState}
+                    <Form.Group
+                        className="mb-3"
+                        controlId="nombre_representante_legal"
+                    >
+                        <Form.Label>Nombre del rep. legal o propietario</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="ej: Juan Pérez"
+                            name="nombre_representante_legal"
+                            value={nombre_representante_legal}
+                            onChange={handleState}
 
-                    ></Form.Control>
-                    <Form.Text className="text-muted">
-                        Nombre del rep. legal o propietario
-                    </Form.Text>
+                        ></Form.Control>
+                        <Form.Text className="text-muted">
+                            Nombre del rep. legal o propietario
+                        </Form.Text>
 
-                </Form.Group>
-                <Form.Group
-                    className="mb-3"
-                    controlId="correo"
+                    </Form.Group>
+                    <Form.Group
+                        className="mb-3"
+                        controlId="correo"
 
-                >
-                    <Form.Label>Correo electrónico</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="ej: jperez@minegocio.com"
-                        name="correo"
-                        value={correo}
-                        onChange={handleState}
+                    >
+                        <Form.Label>Correo electrónico</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="ej: jperez@minegocio.com"
+                            name="correo"
+                            value={correo}
+                            onChange={handleState}
 
-                    ></Form.Control>
-                    <Form.Text className="text-muted">
-                        Correo electrónico propietario o rep. legal
-                    </Form.Text>
+                        ></Form.Control>
+                        <Form.Text className="text-muted">
+                            Correo electrónico propietario o rep. legal
+                        </Form.Text>
 
-                </Form.Group>
+                    </Form.Group>
 
-                <Form.Group
-                    className="mb-3"
-                    controlId="sitioweb"
-                >
-                    <Form.Label>Sitio web</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="ej: www.minegocio.com"
-                        name="sitioweb"
-                        value={sitioweb}
-                        onChange={handleState}
+                    <Form.Group
+                        className="mb-3"
+                        controlId="sitioweb"
+                    >
+                        <Form.Label>Sitio web</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="ej: www.minegocio.com"
+                            name="sitioweb"
+                            value={sitioweb}
+                            onChange={handleState}
 
-                    ></Form.Control>
-                    <Form.Text className="text-muted">
-                        Sitio web (opcional)
-                    </Form.Text>
+                        ></Form.Control>
+                        <Form.Text className="text-muted">
+                            Sitio web (opcional)
+                        </Form.Text>
 
-                </Form.Group>
-                <Button
-                    variant="primary"
-                    type="submit"
-                    block
-                >GUARDAR DATOS DE EMPRESA</Button>
-            </Form>
+                    </Form.Group>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        block
+                    >GUARDAR DATOS DE EMPRESA</Button>
+                </Form>
+            </div>
             {error ?
                 <Alert variant='danger' style={{ marginTop: '20px' }}>
                     {campo} es requerido
